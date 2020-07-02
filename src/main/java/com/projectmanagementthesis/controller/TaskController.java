@@ -12,7 +12,7 @@ import com.projectmanagementthesis.repositories.*;
 
 
 @Controller
-@RequestMapping(path="/task")
+@RequestMapping("/task")
 public class TaskController {
 
 	@Autowired
