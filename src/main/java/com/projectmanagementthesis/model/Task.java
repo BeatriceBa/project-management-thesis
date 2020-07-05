@@ -1,8 +1,20 @@
 package com.projectmanagementthesis.model;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Task {
 	//Good practice is to make the child the owning part of the relationship (relationships one to many)
@@ -13,7 +25,7 @@ public class Task {
 	
 	private String name;
 	
-	//---ACTIVITY - TASK---
+	//---ACTIVITY - TASK - OWNING SIDE---
 	@ManyToOne(
 			fetch = FetchType.LAZY,
 			optional = false

@@ -2,6 +2,7 @@ package com.projectmanagementthesis.model;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -53,9 +56,33 @@ public class User implements UserDetails {
 	@Builder.Default
 	private Boolean enabled = false;
 	
-	@ManyToMany(mappedBy = "user")
-	List<Activity> activities;
+	//---USER - ACTIVITY ---
+	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+	@JoinTable(
+			  name = "user_activity", 
+			  joinColumns = @JoinColumn(name = "user_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "activity_id"))
+	@JsonIgnore
+	private List<Activity> activities;
+	//---
 
+	public User(@NotBlank String name, 
+				@NotBlank String surname,
+				@Email(message = "Enter a valid email address.") @NotBlank String mail,
+				@Size(min = 5, max = 30, message = "Password must be 5-30 characters long.") String password) {
+		super();
+		this.name = name;
+		this.surname = surname;
+		this.mail = mail;
+		this.password = password;
+		this.enabled = true;
+		this.userRole = UserType.USER;
+		this.locked = false;
+		this.enabled = false;
+		this.activities = new LinkedList<Activity> ();
+	}
+	
+	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -98,6 +125,7 @@ public class User implements UserDetails {
 		return "User [id=" + id + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", password="
 				+ password + ", userRole=" + userRole + ", locked=" + locked + ", enabled=" + enabled + "]";
 	}
+
 
 	
 }

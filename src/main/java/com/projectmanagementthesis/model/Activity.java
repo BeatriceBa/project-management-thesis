@@ -38,7 +38,7 @@ public class Activity {
 	private List<Task> tasks;
 	//---
 	
-	//---ACTIVITY - PROJECT---
+	//---ACTIVITY - PROJECT ---
 	@ManyToOne(
 			fetch = FetchType.LAZY,
 			optional = false
@@ -52,15 +52,10 @@ public class Activity {
 	//---
 	
 	//---ACTIVITY - USER---
-	@ManyToMany
-	@JoinTable(
-			name = "activity_user",
-			joinColumns = @JoinColumn(name = "activity_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-			)
-	private List <User> teachers;
+	@ManyToMany(mappedBy = "activities", fetch = FetchType.LAZY)
+	@JsonIgnore
+	private List<User> users;
 	//---
-
 	
 	public Activity(String name, float budget, Project project, LocalDate beginning, LocalDate end) {
 		this.name = name;
@@ -68,6 +63,7 @@ public class Activity {
 		this.project = project;
 		this.beginning = beginning;
 		this.end = end;
+		this.users = new LinkedList<User>();
 	}
 	
 }

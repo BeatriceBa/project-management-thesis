@@ -1,6 +1,7 @@
 package com.projectmanagementthesis.controller;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,8 @@ public class ActivityController {
 	private TaskRepository taskRepository;
 	@Autowired
 	private ProjectRepository projectRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	@PostMapping("/addActivity")
 	public @ResponseBody String addNewActivity (
@@ -56,6 +59,28 @@ public class ActivityController {
 		taskRepository.save(new Task("taskName_6", activity_3));
 		taskRepository.save(new Task("taskName_7", activity_4));
 		taskRepository.save(new Task("taskName_8", activity_4));
+		
+		User user_1 = new User("Name_1", "Surname_1", "email_1@test.test", "password_1");
+		User user_2 = new User("Name_2", "Surname_2", "email_2@test.test", "password_2");
+		User user_3 = new User("Name_3", "Surname_3", "email_3@test.test", "password_3");
+		User user_4 = new User("Name_4", "Surname_4", "email_4@test.test", "password_4");
+		User user_5 = new User("Name_5", "Surname_5", "email_5@test.test", "password_5");
+		User user_6 = new User("Name_6", "Surname_6", "email_6@test.test", "password_6");
+		User user_7 = new User("Name_7", "Surname_7", "email_7@test.test", "password_7");
+		User user_8 = new User("Name_8", "Surname_8", "email_8@test.test", "password_8");
+		
+		userRepository.save(user_1);
+		userRepository.save(user_2);
+		userRepository.save(user_3);
+		userRepository.save(user_4);
+		userRepository.save(user_5);
+		userRepository.save(user_6);
+		userRepository.save(user_7);
+		userRepository.save(user_8);
+		
+		user_1.getActivities().addAll(Arrays.asList(activity_1,activity_2));
+		userRepository.save(user_1);
+
 		
 		return "check workbench pls";
 	}
