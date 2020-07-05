@@ -1,11 +1,18 @@
 package com.projectmanagementthesis.model;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Project {
 
@@ -14,7 +21,12 @@ public class Project {
 	private Integer id;
 
 	private String name;
+	
 	private float budget;
+	
+	private LocalDate beginning;
+	
+	private LocalDate end;
 	
 	//---PROJECT - ACTIVITY---
 	@OneToMany(
@@ -26,45 +38,11 @@ public class Project {
 	private List<Activity> activities_list;
 	//---
 	
-	public Project() { }
-	
-	public Project(String name, float budget) {
+	public Project(String name, float budget, LocalDate beginning, LocalDate end) {
 		this.name = name;
 		this.budget = budget;
+		this.beginning = beginning;
+		this.end = end;
 	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public float getBudget() {
-		return budget;
-	}
-
-	public void setBudget(float budget) {
-		this.budget = budget;
-	}
-
-	public List<Activity> getActivities_list() {
-		return activities_list;
-	}
-
-	public void setActivities_list(List<Activity> activities_list) {
-		this.activities_list = activities_list;
-	}
-	
-	
 }
 

@@ -12,13 +12,13 @@ import com.projectmanagementthesis.repositories.*;
 
 
 @Controller
-@RequestMapping("/task")
+@RequestMapping("/admin")
 public class TaskController {
 
 	@Autowired
 	private TaskRepository taskRepository;
 	
-	@PostMapping(path="/add")
+	@PostMapping(path="/addTask")
 	public @ResponseBody String addNewTask (
 			@RequestParam(name = "name") String name,
 			@RequestParam(name = "activity") Activity activity) {

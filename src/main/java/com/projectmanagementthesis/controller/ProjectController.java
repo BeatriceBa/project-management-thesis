@@ -12,26 +12,20 @@ import com.projectmanagementthesis.model.*;
 import com.projectmanagementthesis.repositories.*;
 
 @Controller
-@RequestMapping(path="/project")
+@RequestMapping("/admin")
 public class ProjectController {
 
 	@Autowired
 	private ProjectRepository projectRepository;
 	
-	@PostMapping(path="/add")
+	@PostMapping("/addProject")
 	public @ResponseBody String addNewProject (
 			@RequestParam(name = "name") String name,
 			@RequestParam(name = "budget") float budget) {
 		
-		System.out.println("Name is: " + name + " and budget is " + budget);
-		Project project = new Project(name, budget);
-		projectRepository.save(project);
-		return "index";
-	}
-	
-	@GetMapping(path="/test")
-	public @ResponseBody String test () {
-		System.out.println("heyya");
+//		System.out.println("Name is: " + name + " and budget is " + budget);
+//		Project project = new Project(name, budget);
+//		projectRepository.save(project);
 		return "index";
 	}
 }

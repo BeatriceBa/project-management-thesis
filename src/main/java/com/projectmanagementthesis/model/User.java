@@ -1,89 +1,103 @@
 package com.projectmanagementthesis.model;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-public class User {
-	
+public class User implements UserDetails {
+
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	@Column(unique=true)
-	private String mail;
-	
-	private String password;
-	
-	@Transient
-	private String registrationPasswordConfirmation;
-	
+	private Long id;
 
+	@NotBlank
 	private String name;
-	private String surname; 
+
+	@NotBlank
+	private String surname;
+
+	@Email(message = "Enter a valid email address.") 
+	@NotBlank
+	private String mail;
+
+	@Size(min = 5, max = 30, message = "Password must be 5-30 characters long.")
+	private String password;
+
+	@Builder.Default
+	private UserType userRole = UserType.USER;
+
+	@Builder.Default
+	private Boolean locked = false;
+
+	@Builder.Default
+	private Boolean enabled = false;
 	
-	private UserType userType;
-	
-	public User() { }
+	@ManyToMany(mappedBy = "user")
+	List<Activity> activities;
 
-	public String getRegistrationPasswordConfirmation() {
-		return registrationPasswordConfirmation;
-	}
-	
-	public void setRegistrationPasswordConfirmation(String registrationPasswordConfirmation) {
-		this.registrationPasswordConfirmation = registrationPasswordConfirmation;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+
+		final SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userRole.name());
+		return Collections.singletonList(simpleGrantedAuthority);
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getMail() {
-		return mail;
-	}
-
-	public void setMail(String mail) {
-		this.mail = mail;
-	}
-
+	@Override
 	public String getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	@Override
+	public String getUsername() {
+		return mail;
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	@Override
+	public boolean isAccountNonLocked() {
+		return !locked;
 	}
 
-	public String getSurname() {
-		return surname;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
 	}
 
-	public void setSurname(String surname) {
-		this.surname = surname;
+	@Override
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public UserType getUserType() {
-		return userType;
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", surname=" + surname + ", mail=" + mail + ", password="
+				+ password + ", userRole=" + userRole + ", locked=" + locked + ", enabled=" + enabled + "]";
 	}
 
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
-	
-	
 	
 }

@@ -1,19 +1,32 @@
 package com.projectmanagementthesis.model;
 
+import java.time.LocalDate;
 import java.util.*;
-
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Activity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	private String name;
+	
 	private float budget;
+	
+	private LocalDate beginning;
+	
+	private LocalDate end;
 	
 	//---ACTIVITY - TASK---
 	@OneToMany(
@@ -38,52 +51,23 @@ public class Activity {
 	private Project project;
 	//---
 	
-	public Activity() { }
+	//---ACTIVITY - USER---
+	@ManyToMany
+	@JoinTable(
+			name = "activity_user",
+			joinColumns = @JoinColumn(name = "activity_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+			)
+	private List <User> teachers;
+	//---
 
-	public Activity(String name, float budget, Project project) {
+	
+	public Activity(String name, float budget, Project project, LocalDate beginning, LocalDate end) {
 		this.name = name;
 		this.budget = budget;
 		this.project = project;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public float getBudget() {
-		return budget;
-	}
-
-	public void setBudget(float budget) {
-		this.budget = budget;
-	}
-
-	public List<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
-	}
-
-	public Project getProject() {
-		return project;
-	}
-
-	public void setProject(Project project) {
-		this.project = project;
+		this.beginning = beginning;
+		this.end = end;
 	}
 	
 }

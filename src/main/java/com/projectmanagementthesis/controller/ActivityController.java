@@ -1,5 +1,6 @@
 package com.projectmanagementthesis.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ import com.projectmanagementthesis.repositories.*;
 
 
 @Controller
-@RequestMapping(path="/activities")
+@RequestMapping("/admin")
 public class ActivityController {
 	@Autowired
 	private ActivityRepository activityRepository;
@@ -21,7 +22,7 @@ public class ActivityController {
 	@Autowired
 	private ProjectRepository projectRepository;
 	
-	@PostMapping(path="/add")
+	@PostMapping("/addActivity")
 	public @ResponseBody String addNewActivity (
 			@RequestParam(name = "budget") float budget,
 			@RequestParam(name = "task") List<String> task_list) {
@@ -29,18 +30,18 @@ public class ActivityController {
 		return "Added";
 	}
 	
-	@GetMapping(path="/populate")
+	@GetMapping("/populate")
 	public @ResponseBody String populate() {
-		Project project_1 = new Project("Project_1", 10000);
-		Project project_2 = new Project("Project_2", 20000);
+		Project project_1 = new Project("Project_1", 10000, LocalDate.now(), LocalDate.now().plusYears(2));
+		Project project_2 = new Project("Project_2", 20000, LocalDate.now(), LocalDate.now().plusYears(2));
 		
 		projectRepository.save(project_1);
 		projectRepository.save(project_2);
 		
-		Activity activity_1 = new Activity("Activity_1", 5000, project_1);
-		Activity activity_2 = new Activity("Activity_2", 5000, project_1);
-		Activity activity_3 = new Activity("Activity_3", 10000, project_2);
-		Activity activity_4 = new Activity("Activity_4", 10000, project_2);
+		Activity activity_1 = new Activity("Activity_1", 5000, project_1, LocalDate.now(), LocalDate.now().plusYears(1));
+		Activity activity_2 = new Activity("Activity_2", 5000, project_1, LocalDate.now().plusYears(1), LocalDate.now().plusYears(2));
+		Activity activity_3 = new Activity("Activity_3", 10000, project_2, LocalDate.now(), LocalDate.now().plusYears(1));
+		Activity activity_4 = new Activity("Activity_4", 10000, project_2, LocalDate.now().plusYears(1), LocalDate.now().plusYears(2));
 
 		activityRepository.save(activity_1);
 		activityRepository.save(activity_2);
@@ -59,14 +60,9 @@ public class ActivityController {
 		return "check workbench pls";
 	}
 	
-	@GetMapping(path="/show")
+	@GetMapping("/showActivities")
 	public @ResponseBody Iterable<Activity> getAllActivities() {
 		return activityRepository.findAll();
-	}
-	
-	@GetMapping("/calendar")
-	public String calendar() {
-		return "calendar";
 	}
 	
 }
