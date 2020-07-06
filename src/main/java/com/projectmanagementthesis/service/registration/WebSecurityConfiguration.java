@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+	
 	@Autowired
 	private UserService userService;
 	
@@ -22,20 +23,20 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		http.authorizeRequests()
-				.antMatchers("/sign-up", "/sign-in").permitAll()
-				.antMatchers("/admin/**").hasAuthority("ADMINISTRATOR")
-				.antMatchers("/user/**").hasAnyAuthority("USER") 
-				.anyRequest().authenticated()
-				.and()
-			.formLogin()
-				.loginPage("/sign-in")
-				.permitAll()
-				.and()
-			.logout()
-				.logoutUrl("/logout")
-				.logoutSuccessUrl("/sign-in")
-				.and()
-			.httpBasic();
+				.antMatchers("/sign-up", "/sign-in", "/test/**").permitAll();
+//				.antMatchers("/admin/**").hasAuthority("ADMINISTRATOR")
+//				.antMatchers("/user/**").hasAnyAuthority("USER") 
+//				.anyRequest().authenticated()
+//				.and()
+//			.formLogin()
+//				.loginPage("/sign-in")
+//				.permitAll()
+//				.and()
+//			.logout()
+//				.logoutUrl("/logout")
+//				.logoutSuccessUrl("/sign-in")
+//				.and()
+//			.httpBasic();
 	}
 	
 	@Autowired

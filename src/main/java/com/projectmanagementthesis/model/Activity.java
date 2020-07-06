@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.*;
 import javax.persistence.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

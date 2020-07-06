@@ -2,10 +2,8 @@ package com.projectmanagementthesis.service.registration;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -15,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.stream.Collectors;
 
 import com.projectmanagementthesis.model.User;
 import com.projectmanagementthesis.model.UserType;
@@ -24,7 +21,6 @@ import com.projectmanagementthesis.service.registration.ConfirmationToken;
 import com.projectmanagementthesis.service.registration.ConfirmationTokenService;
 import com.projectmanagementthesis.service.registration.EmailSenderService;
 
-import lombok.AllArgsConstructor;
 
 
 //https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745
@@ -123,6 +119,10 @@ public class UserService implements UserDetailsService {
 		userRepository.save(user);
 		confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
 
+	}
+	
+	public Iterable<User> getUsers() {
+		return userRepository.findAll();
 	}
 	
 	
