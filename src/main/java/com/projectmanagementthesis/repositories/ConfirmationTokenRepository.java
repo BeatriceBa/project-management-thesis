@@ -3,7 +3,7 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.projectmanagementthesis.service.registration.ConfirmationToken;
+import com.projectmanagementthesis.service.confirmRegistration.ConfirmationToken;
 
 public interface ConfirmationTokenRepository extends CrudRepository <ConfirmationToken,Long>{
 

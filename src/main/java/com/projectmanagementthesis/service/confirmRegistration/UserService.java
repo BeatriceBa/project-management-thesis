@@ -1,4 +1,4 @@
-package com.projectmanagementthesis.service.registration;
+package com.projectmanagementthesis.service.confirmRegistration;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -7,7 +7,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,11 +16,9 @@ import org.springframework.stereotype.Service;
 import com.projectmanagementthesis.model.User;
 import com.projectmanagementthesis.model.UserType;
 import com.projectmanagementthesis.repositories.UserRepository;
-import com.projectmanagementthesis.service.registration.ConfirmationToken;
-import com.projectmanagementthesis.service.registration.ConfirmationTokenService;
-import com.projectmanagementthesis.service.registration.EmailSenderService;
-
-
+import com.projectmanagementthesis.service.confirmRegistration.ConfirmationToken;
+import com.projectmanagementthesis.service.confirmRegistration.ConfirmationTokenService;
+import com.projectmanagementthesis.service.confirmRegistration.EmailSenderService;
 
 //https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745
 @Service
@@ -38,6 +35,7 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private EmailSenderService emailSenderService;
+	
 
 	public void sendConfirmationMail(String userMail, String token) {
 
@@ -57,12 +55,6 @@ public class UserService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
 		final Optional<User> optionalUser = userRepository.findByMail(email);
-		//May not be necessary...
-		List <SimpleGrantedAuthority> grantedAuthorities = new ArrayList <SimpleGrantedAuthority>();
-		optionalUser.ifPresent(user -> {
-			grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + optionalUser.get().getUserRole()));
-		});
-		//Gonna keep them just in case
 		
 		return optionalUser.orElseThrow(() -> new UsernameNotFoundException
 			(MessageFormat.format("User with email {0} cannot be found.", email)));
@@ -125,6 +117,14 @@ public class UserService implements UserDetailsService {
 		return userRepository.findAll();
 	}
 	
+	public User deleteById(long id) {
+		Optional<User> deleted = userRepository.findById(id);
+		if(deleted.isPresent())	{
+			userRepository.delete(deleted.get());
+			return deleted.get();
+		}
+		return null;
+	}
 	
 }
 

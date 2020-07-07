@@ -1,4 +1,4 @@
-package com.projectmanagementthesis.service.registration;
+package com.projectmanagementthesis.service.confirmRegistration;
 
 import java.time.LocalDate;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.projectmanagementthesis.service.registration;
+package com.projectmanagementthesis.service.confirmRegistration;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
