@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.projectmanagementthesis.model.User;
 import com.projectmanagementthesis.model.UserType;
 import com.projectmanagementthesis.repositories.UserRepository;
+import com.projectmanagementthesis.requests.SignUpRequest;
 import com.projectmanagementthesis.service.confirmRegistration.ConfirmationToken;
 import com.projectmanagementthesis.service.confirmRegistration.ConfirmationTokenService;
 import com.projectmanagementthesis.service.confirmRegistration.EmailSenderService;
@@ -61,16 +62,24 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public void signUpUserNoConfirmation(User user) {
-
-		Optional<User> existingUser = userRepository.findByMail(user.getMail());
+	public boolean signUpUserNoConfirmation(SignUpRequest signUpRequest) {
+		
+		Optional<User> existingUser = userRepository.findByMail(signUpRequest.getMail());
 		if (!existingUser.isPresent()) {
+			
+			User user = new User(signUpRequest.getName(), 
+					signUpRequest.getSurname(),
+					signUpRequest.getMail(),
+					signUpRequest.getPassword());
+			
 			final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 			user.setPassword(encryptedPassword);
 			user.setEnabled(true);
+			
 			userRepository.save(user);
+			return true;
 		}
-		else System.out.println("User already exists!");
+		return false;
 
 	}
 	

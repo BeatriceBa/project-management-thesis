@@ -1,6 +1,7 @@
 package com.projectmanagementthesis.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -19,22 +20,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectmanagementthesis.model.User;
-import com.projectmanagementthesis.repositories.UserRepository;
 import com.projectmanagementthesis.requests.*;
 import com.projectmanagementthesis.responses.JwtResponse;
 import com.projectmanagementthesis.responses.MessageResponse;
 import com.projectmanagementthesis.security.jwt.JwtUtils;
+import com.projectmanagementthesis.service.confirmRegistration.UserService;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/authentication")
 public class AuthenticationController {
 	@Autowired
 	AuthenticationManager authenticationManager;
 
 	@Autowired
-	UserRepository userRepository;
+	UserService userService;
 
 	@Autowired
 	PasswordEncoder encoder;
@@ -56,24 +57,16 @@ public class AuthenticationController {
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(
-				new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getMail(), roles));
+				new JwtResponse(jwt, userDetails.getId(), userDetails.getName(), userDetails.getSurname(), userDetails.getMail(), roles));
 	}
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-
-		if (userRepository.findByMail(signUpRequest.getMail()).isPresent()) {
+		if (!userService.signUpUserNoConfirmation(signUpRequest)) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Mail is already taken!"));
 		}
-		
-		User user = new User(signUpRequest.getName(), 
-				signUpRequest.getSurname(),
-				signUpRequest.getMail(),
-				signUpRequest.getPassword());
-
-		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}

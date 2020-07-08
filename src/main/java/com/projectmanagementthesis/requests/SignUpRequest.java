@@ -7,6 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SignUpRequest {
+
 	private String name;
 
 	private String surname;
@@ -14,4 +15,10 @@ public class SignUpRequest {
 	private String mail;
 
 	private String password;
+
+	@Override
+	public String toString() {
+		return "SignUpRequest [name=" + name + ", surname=" + surname + ", mail=" + mail + ", password=" + password
+				+ "]";
+	}
 }
