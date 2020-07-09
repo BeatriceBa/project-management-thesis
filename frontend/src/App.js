@@ -6,9 +6,15 @@ import "./App.css";
 import AuthService from "./Service/auth.service";
 import Login from "./Component/login.component";
 import Register from "./Component/register.component";
+import AddProject from "./Component/project.component";
+import AddActivity from "./Component/add-activity.component";
+
 import Profile from "./Component/profile.component";
 import BoardUser from "./Component/board-user.component";
 import BoardAdmin from "./Component/board-admin.component";
+import Home from "./Component/home.component";
+import ShowInfo from "./Component/show-info.component";
+
 
 class App extends Component {
   constructor(props) {
@@ -18,7 +24,7 @@ class App extends Component {
     this.state = {
       showAdminBoard: false,
       showUserBoard : false,
-      currentUser: undefined,
+      currentUser: undefined
     };
   }
 
@@ -48,6 +54,7 @@ class App extends Component {
             <Link to={"/"} className="navbar-brand">
               Management
             </Link>
+              
             <div className="navbar-nav mr-auto">
               <li className="nav-item">
                 <Link to={"/home"} className="nav-link">
@@ -56,16 +63,25 @@ class App extends Component {
               </li>
 
               {showAdminBoard && (
+                      <div className="navbar-nav ml-auto">            		  
                       <li className="nav-item">
-                        <Link to={"api/test/admin"} className="nav-link">
+                        <Link to={"/admin"} className="nav-link">
                           Admin Board
                         </Link>
                       </li>
+                     
+                      <li className="nav-item">
+	                      <Link to={"/addProject"} className="nav-link">
+	                        Add Project
+	                      </Link>
+	                   </li>
+	                   
+	                  </div> 
                     )}
               
               {showUserBoard && (
                 <li className="nav-item">
-                  <Link to={"api/test/user"} className="nav-link">
+                  <Link to={"/user"} className="nav-link">
                     User
                   </Link>
                 </li>
@@ -76,7 +92,7 @@ class App extends Component {
               <div className="navbar-nav ml-auto">
                 <li className="nav-item">
                   <Link to={"/profile"} className="nav-link">
-                    {currentUser.username}
+                    {currentUser.name}
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -104,13 +120,15 @@ class App extends Component {
 
           <div className="container mt-3">
             <Switch>
-              <Route exact path={["/", "/home"]} component={Login} />
+              <Route exact path={["/", "/home"]} component={Home} />
+              <Route exact path="/profile" component={Profile} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
-              <Route exact path="/profile" component={Profile} />
+              <Route exact path="/addProject" component={AddProject} />
+              <Route exact path="/addActivity/:id" component={AddActivity} />
+              <Route path="/showInfo/:id" component={ShowInfo} />
               <Route path="/user" component={BoardUser} />
               <Route path="/admin" component={BoardAdmin} />
- 
             </Switch>
           </div>
         </div>

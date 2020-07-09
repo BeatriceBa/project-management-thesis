@@ -1,38 +1,69 @@
-package com.projectmanagementthesis.controller;
+package com.projectmanagementthesis.service.addProject;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.projectmanagementthesis.model.*;
+import com.projectmanagementthesis.model.Activity;
+import com.projectmanagementthesis.model.Project;
+import com.projectmanagementthesis.model.Task;
+import com.projectmanagementthesis.model.User;
 import com.projectmanagementthesis.repositories.*;
 
-
-@RestController
-@RequestMapping("/admin")
-public class ActivityController {
-	@Autowired
-	private ActivityRepository activityRepository;
-	@Autowired
-	private TaskRepository taskRepository;
+@Service
+public class ProjectService {
 	@Autowired
 	private ProjectRepository projectRepository;
+	
+	@Autowired
+	private ActivityRepository activityRepository;
+	
+	@Autowired
+	private TaskRepository taskRepository;
+	
 	@Autowired
 	private UserRepository userRepository;
 	
-	@PostMapping("/addActivity")
-	public @ResponseBody String addNewActivity (
-			@RequestParam(name = "budget") float budget,
-			@RequestParam(name = "task") List<String> task_list) {
-
-		return "Added";
+	public Project addNewProject(Project project) {
+		Project added = projectRepository.save(project);
+		return added;
 	}
 	
-	@GetMapping("/populate")
-	public @ResponseBody String populate() {
+	public Activity addNewActivity(Activity activity) {
+		Activity added = activityRepository.save(activity);
+		return added;
+	}
+	
+	public Task addNewTask(Task task) {
+		Task added = taskRepository.save(task);
+		return added;
+	}
+	
+	public List<Project> getProjects() {
+		List<Project> result = new ArrayList<Project>();
+		projectRepository.findAll().forEach(result::add);
+		
+		return result;
+	}
+	
+	public List<Activity> getActivitiesPerProject(Integer id) {
+		return activityRepository.findByProjectId(id);
+	}
+	
+	public Project getSingleProject(Integer id) {
+		Optional<Project> result = projectRepository.findById(id);
+		if (result.isPresent())
+			return result.get();
+		return null;
+	}
+	
+	public void populate() {
 		Project project_1 = new Project("Project_1", 10000, LocalDate.now(), LocalDate.now().plusYears(2));
 		Project project_2 = new Project("Project_2", 20000, LocalDate.now(), LocalDate.now().plusYears(2));
 		
@@ -78,14 +109,7 @@ public class ActivityController {
 		
 		user_1.getActivities().addAll(Arrays.asList(activity_1,activity_2));
 		userRepository.save(user_1);
-
 		
-		return "check workbench pls";
-	}
-	
-	@GetMapping("/showActivities")
-	public @ResponseBody Iterable<Activity> getAllActivities() {
-		return activityRepository.findAll();
 	}
 	
 }

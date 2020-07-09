@@ -1,7 +1,6 @@
 package com.projectmanagementthesis.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -52,7 +51,9 @@ public class AuthenticationController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
+		
 		User userDetails = (User) authentication.getPrincipal();
+		System.out.println(userDetails.getAuthorities());
 		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 				.collect(Collectors.toList());
 

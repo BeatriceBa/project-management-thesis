@@ -63,7 +63,7 @@ export default class Register extends Component {
   
   onChangeSurname(e) {
 	 this.setState({
-	     name: e.target.value
+	     surname: e.target.value
 	  });
    }
 

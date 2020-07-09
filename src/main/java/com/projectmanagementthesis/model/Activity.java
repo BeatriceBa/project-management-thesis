@@ -55,6 +55,14 @@ public class Activity {
 	private List<User> users;
 	//---
 	
+	public Activity(String name, float budget, LocalDate beginning, LocalDate end) {
+		this.name = name;
+		this.budget = budget;
+		this.beginning = beginning;
+		this.end = end;
+		this.users = new LinkedList<User>();
+	}
+	
 	public Activity(String name, float budget, Project project, LocalDate beginning, LocalDate end) {
 		this.name = name;
 		this.budget = budget;
