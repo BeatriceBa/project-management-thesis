@@ -26,6 +26,8 @@ public class Activity {
 	
 	private LocalDate end;
 	
+	private float currentBudget = 0;
+	
 	//---ACTIVITY - TASK---
 	@OneToMany(
 			mappedBy = "activity",
@@ -49,18 +51,23 @@ public class Activity {
 	private Project project;
 	//---
 	
-	//---ACTIVITY - USER---
-	@ManyToMany(mappedBy = "activities", fetch = FetchType.LAZY)
+//	//---ACTIVITY - USER---
+//	@ManyToMany(mappedBy = "activities", fetch = FetchType.LAZY)
+//	@JsonIgnore
+//	private List<User> users;
+//	//---
+	
+	@OneToMany(mappedBy = "activity")
 	@JsonIgnore
-	private List<User> users;
-	//---
+	private List<UserActivityHour> userActivityHour;
 	
 	public Activity(String name, float budget, LocalDate beginning, LocalDate end) {
 		this.name = name;
 		this.budget = budget;
 		this.beginning = beginning;
 		this.end = end;
-		this.users = new LinkedList<User>();
+		this.userActivityHour = new LinkedList<UserActivityHour>();
+//		this.users = new LinkedList<User>();
 	}
 	
 	public Activity(String name, float budget, Project project, LocalDate beginning, LocalDate end) {
@@ -69,7 +76,8 @@ public class Activity {
 		this.project = project;
 		this.beginning = beginning;
 		this.end = end;
-		this.users = new LinkedList<User>();
+		this.userActivityHour = new LinkedList<UserActivityHour>();
+//		this.users = new LinkedList<User>();
 	}
 	
 }

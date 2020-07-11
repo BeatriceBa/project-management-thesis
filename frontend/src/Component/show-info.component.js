@@ -14,6 +14,8 @@ class ShowInfo extends Component {
         }
         this.getProject = this.getProject.bind(this)
         this.getActivties = this.getActivities.bind(this)
+        this.seeUsers = this.seeUsers.bind(this)
+
     }
 
     componentDidMount() {
@@ -40,12 +42,17 @@ class ShowInfo extends Component {
 			});
 	}
     
+    seeUsers(id) {
+    	console.log("info of " + id)
+    	this.props.history.push(`/getUsersAssociated/${id}`)
+    }
+    
     
     render() {
     	return (
 	    <div className="container">
 			<header className="jumbotron">
-			{ this.state.project && <h1>Name : {this.state.project.name}</h1> }
+			{ this.state.project && <h1>Activities related to: {this.state.project.name}</h1> }
 		</header>
 		<div className="container">
 	    <table className="table">
@@ -66,6 +73,7 @@ class ShowInfo extends Component {
 	                            <td>{activity.budget}</td>
 	                            <td>{activity.beginning}</td>
 	                            <td>{activity.end}</td>
+                                <td><button className="btn btn-success" onClick={() => this.seeUsers(activity.id)}>Show Info</button></td>
 	                        </tr>
 	             )}
 	            </tbody>

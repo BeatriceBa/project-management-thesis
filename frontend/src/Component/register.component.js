@@ -44,12 +44,15 @@ export default class Register extends Component {
     this.onChangeSurname = this.onChangeSurname.bind(this);
     this.onChangeMail = this.onChangeMail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
+    this.onChangePricePerHour = this.onChangePricePerHour.bind(this);
 
+    
     this.state = {
       name: "",
       surname: "",
       mail: "",
       password: "",
+      pricePerHour: "",
       successful: false,
       message: ""
     };
@@ -64,6 +67,12 @@ export default class Register extends Component {
   onChangeSurname(e) {
 	 this.setState({
 	     surname: e.target.value
+	  });
+   }
+  
+  onChangePricePerHour(e) {
+	this.setState({
+	     pricePerHour: e.target.value
 	  });
    }
 
@@ -93,6 +102,7 @@ export default class Register extends Component {
       AuthService.register(
         this.state.name,
         this.state.surname,
+        this.state.pricePerHour,
         this.state.mail,
         this.state.password
       ).then(
@@ -157,6 +167,20 @@ export default class Register extends Component {
                     name="surname"
                     value={this.state.surname}
                     onChange={this.onChangeSurname}
+                    validations={[required]}
+                  />
+                </div>
+                  
+                  <div className="form-group">
+                  <label htmlFor="pricePerHour">Price Per Hour</label>
+                  <Input
+                    type="text"
+                    className="form-control"
+                    name="pricePerHour"
+                    pattern="[0-9]*" 
+                    inputmode="numeric"	
+                    value={this.state.pricePerHour}
+                    onChange={this.onChangePricePerHour}
                     validations={[required]}
                   />
                 </div>

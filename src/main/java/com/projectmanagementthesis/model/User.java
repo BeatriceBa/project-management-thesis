@@ -40,6 +40,9 @@ public class User implements UserDetails {
 	@NotBlank
 	private String surname;
 
+	@NotBlank
+	private float pricePerHour;
+
 	@Email(message = "Enter a valid email address.") 
 	@NotBlank
 	private String mail;
@@ -56,18 +59,25 @@ public class User implements UserDetails {
 	@Builder.Default
 	private Boolean enabled = false;
 	
-	//---USER - ACTIVITY ---
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-	@JoinTable(
-			  name = "user_activity", 
-			  joinColumns = @JoinColumn(name = "user_id"), 
-			  inverseJoinColumns = @JoinColumn(name = "activity_id"))
+	
+	@OneToMany(mappedBy = "user")
 	@JsonIgnore
-	private List<Activity> activities;
-	//---
+	private List<UserActivityHour> userActivityHour;
+	
+	
+//	//---USER - ACTIVITY ---
+//	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+//	@JoinTable(
+//			  name = "user_activity", 
+//			  joinColumns = @JoinColumn(name = "user_id"), 
+//			  inverseJoinColumns = @JoinColumn(name = "activity_id"))
+//	@JsonIgnore
+//	private List<Activity> activities;
+//	//---
 
 	public User(@NotBlank String name, 
 				@NotBlank String surname,
+				@NotBlank float pricePerHour,
 				@Email(message = "Enter a valid email address.") @NotBlank String mail,
 				@Size(min = 5, max = 30, message = "Password must be 5-30 characters long.") String password) {
 		super();
@@ -75,11 +85,13 @@ public class User implements UserDetails {
 		this.surname = surname;
 		this.mail = mail;
 		this.password = password;
+		this.pricePerHour = pricePerHour;
 		this.enabled = true;
 		this.userRole = UserType.USER;
 		this.locked = false;
 		this.enabled = false;
-		this.activities = new LinkedList<Activity> ();
+		this.userActivityHour = new LinkedList<UserActivityHour>();
+//		this.activities = new LinkedList<Activity> ();
 	}
 	
 	

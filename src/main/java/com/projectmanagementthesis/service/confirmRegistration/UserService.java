@@ -69,6 +69,7 @@ public class UserService implements UserDetailsService {
 			
 			User user = new User(signUpRequest.getName(), 
 					signUpRequest.getSurname(),
+					signUpRequest.getPricePerHour(),
 					signUpRequest.getMail(),
 					signUpRequest.getPassword());
 			
@@ -99,17 +100,26 @@ public class UserService implements UserDetailsService {
 
 	}
 	
-	public void signUpAdminNoConfirmation(User user) {
-
-		Optional<User> existingUser = userRepository.findByMail(user.getMail());
+	public boolean signUpAdminNoConfirmation(SignUpRequest signUpRequest) {
+		
+		Optional<User> existingUser = userRepository.findByMail(signUpRequest.getMail());
 		if (!existingUser.isPresent()) {
+			
+			User user = new User(signUpRequest.getName(), 
+					signUpRequest.getSurname(),
+					signUpRequest.getPricePerHour(),
+					signUpRequest.getMail(),
+					signUpRequest.getPassword());
+			
 			final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 			user.setPassword(encryptedPassword);
 			user.setEnabled(true);
 			user.setUserRole(UserType.ADMINISTRATOR);
+
 			userRepository.save(user);
+			return true;
 		}
-		else System.out.println("User already exists!");
+		return false;
 
 	}
 

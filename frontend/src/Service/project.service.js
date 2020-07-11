@@ -25,6 +25,22 @@ class ProjectService {
 		return axios.post(API_URL + "getProject", {projectId }, { headers: authHeader() });
 	}
 	
+	associateUser(userId, activityId) {
+		return axios.post(API_URL + "associateUser", {userId, activityId}, { headers: authHeader() });
+	}
+	
+	getUsersAssociated(activityId) {
+		return axios.post(API_URL + "getUsersAssociated", {activityId}, { headers: authHeader() });
+	}
+	
+	getActivity(activityId) {
+		return axios.post(API_URL + "getActivity", {activityId}, { headers: authHeader() });
+	}
+	
+	getUsers() {
+		return axios.get(API_URL + "getUsers", { headers: authHeader() });
+	}
+	
 }
 
 export default new ProjectService();

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,12 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectmanagementthesis.model.*;
-import com.projectmanagementthesis.requests.AddActivityRequest;
-import com.projectmanagementthesis.requests.AddProjectRequest;
-import com.projectmanagementthesis.requests.GetInfoRequest;
-import com.projectmanagementthesis.responses.GetActivitiesResponse;
-import com.projectmanagementthesis.responses.GetProjectResponse;
-import com.projectmanagementthesis.responses.MessageResponse;
+import com.projectmanagementthesis.repositories.ActivityRepository;
+import com.projectmanagementthesis.requests.*;
+import com.projectmanagementthesis.responses.*;
 import com.projectmanagementthesis.service.addProject.ProjectService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -45,6 +43,12 @@ public class AdminController {
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
 	public List<Project> getProjects() {
 		return projectService.getProjects();
+	}
+
+	@GetMapping("/getUsers")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public List<User> getUsers() {
+		return projectService.getUsers();
 	}
 	
 	@PostMapping("/getActivities")
@@ -71,6 +75,41 @@ public class AdminController {
 		
 		return ResponseEntity.ok(new MessageResponse("Activity added successfully!"));
 	}
+	
+	@PostMapping("/associateUser")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public ResponseEntity<?> associateUser(@Valid @RequestBody AssociateUserToActivityRequest request) {
+		System.out.println("request user " + request.getUserId() + " request activity " + request.getActivityId());
+		
+		Activity activity = projectService.getSingleActivity(request.getActivityId());
+		User user = projectService.getSingleUser(request.getUserId());
+		
+		System.out.println("activity_cont " + activity);
+		System.out.println("user_cont " + user);
+
+		UserActivityHour userActivityHour = new UserActivityHour
+				(new UAKey(request.getUserId(),request.getActivityId()), user, activity, 0);
+		System.out.println(userActivityHour);
+		if(projectService.addUserActivityHour(userActivityHour) != null)
+			return ResponseEntity.ok(new MessageResponse("User associated successfully!"));
+		else return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("User already associated to this activity");
+	}
+	
+	@PostMapping("/getUsersAssociated")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public List<User> getUsersAssociated(@Valid @RequestBody SeeUsersAssociatedRequest request) {
+		List<User> usersAssociated = projectService.getUsersAssociated(request.getActivityId());
+		return usersAssociated;
+	}
+	
+	@PostMapping("/getActivity")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public Activity getActivity(@Valid @RequestBody GetActivityRequest request) {
+		Activity activity = projectService.getSingleActivity(request.getActivityId());
+		
+		return activity;
+	}
+	
 
 	
 }

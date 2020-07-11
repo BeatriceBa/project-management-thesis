@@ -39,12 +39,11 @@ export default class BoardAdmin extends Component {
     	this.props.history.push(`/addActivity/${id}`)
     }
     
-    
     render() {
     	return (
     		<div className="container">
     			<header className="jumbotron">
-    			<h3>All projects</h3>
+    			<h1>All projects</h1>
     		</header>
     		<div className="container">
             <table className="table">
@@ -55,6 +54,7 @@ export default class BoardAdmin extends Component {
                         <th>Begins</th>
                         <th>Ends</th>
                         <th>Info</th>
+                        <th>Add Activity</th>
                     </tr>
                 </thead>
                 <tbody>

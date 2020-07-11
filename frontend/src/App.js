@@ -14,6 +14,9 @@ import BoardUser from "./Component/board-user.component";
 import BoardAdmin from "./Component/board-admin.component";
 import Home from "./Component/home.component";
 import ShowInfo from "./Component/show-info.component";
+import UsersAssociated from "./Component/see-users-associated.component";
+import AssociateUser from "./Component/associate-user.component";
+
 
 
 class App extends Component {
@@ -127,6 +130,8 @@ class App extends Component {
               <Route exact path="/addProject" component={AddProject} />
               <Route exact path="/addActivity/:id" component={AddActivity} />
               <Route path="/showInfo/:id" component={ShowInfo} />
+              <Route path="/getUsersAssociated/:id" component={UsersAssociated} />
+              <Route path="/associateUser/:id" component={AssociateUser} />
               <Route path="/user" component={BoardUser} />
               <Route path="/admin" component={BoardAdmin} />
             </Switch>

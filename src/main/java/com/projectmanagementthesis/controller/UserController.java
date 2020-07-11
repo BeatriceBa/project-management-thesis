@@ -41,12 +41,6 @@ public class UserController {
 		return "sign-up";
 	}
 
-	@PostMapping("/sign-up")
-	String signUp(User user) {
-		//userService.signUpUser(user);
-		userService.signUpAdminNoConfirmation(user);
-		return "redirect:/sign-in";
-	}
 
 	@GetMapping("/sign-up/confirm")
 	String confirmMail(@RequestParam("token") String token) {

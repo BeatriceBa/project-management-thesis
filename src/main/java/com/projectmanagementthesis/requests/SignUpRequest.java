@@ -15,6 +15,8 @@ public class SignUpRequest {
 	private String mail;
 
 	private String password;
+	
+	private float pricePerHour;
 
 	@Override
 	public String toString() {

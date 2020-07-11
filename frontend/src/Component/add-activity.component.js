@@ -110,7 +110,6 @@ export default class AddActivity extends Component {
       <div className="col-md-12">
         <div className="card card-container">
           
-
           <Form
             onSubmit={this.handleAddActivity}
             ref = {c => {
