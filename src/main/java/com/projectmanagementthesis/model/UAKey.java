@@ -14,6 +14,9 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class UAKey implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
 	@Column(name = "user_id")
 	private long userId;
 	

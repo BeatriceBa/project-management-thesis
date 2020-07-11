@@ -8,7 +8,6 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -42,6 +41,8 @@ public class User implements UserDetails {
 
 	@NotBlank
 	private float pricePerHour;
+	
+	private Integer dailyHours;
 
 	@Email(message = "Enter a valid email address.") 
 	@NotBlank
@@ -58,7 +59,6 @@ public class User implements UserDetails {
 
 	@Builder.Default
 	private Boolean enabled = false;
-	
 	
 	@OneToMany(mappedBy = "user")
 	@JsonIgnore
@@ -91,6 +91,7 @@ public class User implements UserDetails {
 		this.locked = false;
 		this.enabled = false;
 		this.userActivityHour = new LinkedList<UserActivityHour>();
+		this.dailyHours = 0;
 //		this.activities = new LinkedList<Activity> ();
 	}
 	

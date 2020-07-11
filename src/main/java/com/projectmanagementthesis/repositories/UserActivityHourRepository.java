@@ -7,5 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import com.projectmanagementthesis.model.*;
 
 public interface UserActivityHourRepository extends CrudRepository<UserActivityHour,UAKey> {
-	List<UserActivityHour> findByActivity(Activity activity);
+	public List<UserActivityHour> findByActivity(Activity activity);
+	public List<UserActivityHour> findByUser(User user);
 }

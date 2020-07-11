@@ -10,17 +10,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectmanagementthesis.model.*;
-import com.projectmanagementthesis.repositories.ActivityRepository;
 import com.projectmanagementthesis.requests.*;
 import com.projectmanagementthesis.responses.*;
-import com.projectmanagementthesis.service.addProject.ProjectService;
+import com.projectmanagementthesis.service.project.ProjectService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -51,16 +49,23 @@ public class AdminController {
 		return projectService.getUsers();
 	}
 	
+	@GetMapping("/getAvailableUsers")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public List<User> getAvailableUsers() {
+		return projectService.getAvailableUsers();
+	}
+	
+	
 	@PostMapping("/getActivities")
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
-	public List<Activity> getActivities(@Valid @RequestBody GetInfoRequest request) {
+	public List<Activity> getActivities(@Valid @RequestBody ProjectRequest request) {
 		List<Activity> activities = projectService.getActivitiesPerProject(request.getProjectId());
 		return activities;
 	}
 	
 	@PostMapping("/getProject")
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
-	public Project getProject(@Valid @RequestBody GetInfoRequest request) {
+	public Project getProject(@Valid @RequestBody ProjectRequest request) {
 		Project currentProject = projectService.getSingleProject(request.getProjectId());
 		return currentProject;
 	}
@@ -78,18 +83,13 @@ public class AdminController {
 	
 	@PostMapping("/associateUser")
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
-	public ResponseEntity<?> associateUser(@Valid @RequestBody AssociateUserToActivityRequest request) {
-		System.out.println("request user " + request.getUserId() + " request activity " + request.getActivityId());
-		
+	public ResponseEntity<?> associateUser(@Valid @RequestBody UserActivityRequest request) {		
 		Activity activity = projectService.getSingleActivity(request.getActivityId());
 		User user = projectService.getSingleUser(request.getUserId());
-		
-		System.out.println("activity_cont " + activity);
-		System.out.println("user_cont " + user);
 
 		UserActivityHour userActivityHour = new UserActivityHour
 				(new UAKey(request.getUserId(),request.getActivityId()), user, activity, 0);
-		System.out.println(userActivityHour);
+
 		if(projectService.addUserActivityHour(userActivityHour) != null)
 			return ResponseEntity.ok(new MessageResponse("User associated successfully!"));
 		else return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("User already associated to this activity");
@@ -104,12 +104,17 @@ public class AdminController {
 	
 	@PostMapping("/getActivity")
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
-	public Activity getActivity(@Valid @RequestBody GetActivityRequest request) {
+	public Activity getActivity(@Valid @RequestBody ActivityRequest request) {
 		Activity activity = projectService.getSingleActivity(request.getActivityId());
 		
 		return activity;
 	}
 	
+	@PostMapping("/getCurrentProjectBudget")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public float getCurrentProjectBudget(@Valid @RequestBody ProjectRequest request) {
+		return projectService.getCurrentProjectBudget(request.getProjectId());
+	}
 
 	
 }

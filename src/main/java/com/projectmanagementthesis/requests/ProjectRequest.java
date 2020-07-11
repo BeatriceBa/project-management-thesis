@@ -6,6 +6,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetInfoRequest {
+public class ProjectRequest {
 	private Integer projectId;
 }

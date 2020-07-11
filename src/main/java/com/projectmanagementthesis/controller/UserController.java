@@ -1,60 +1,73 @@
 package com.projectmanagementthesis.controller;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectmanagementthesis.model.*;
-import com.projectmanagementthesis.service.confirmRegistration.ConfirmationToken;
-import com.projectmanagementthesis.service.confirmRegistration.ConfirmationTokenService;
-import com.projectmanagementthesis.service.confirmRegistration.UserService;
+import com.projectmanagementthesis.requests.ActivityRequest;
+import com.projectmanagementthesis.requests.ProjectRequest;
+import com.projectmanagementthesis.requests.SeeActivitiesAssociatedRequest;
+import com.projectmanagementthesis.requests.UserActivityHourRequest;
+import com.projectmanagementthesis.requests.UserActivityRequest;
+import com.projectmanagementthesis.responses.MessageResponse;
+import com.projectmanagementthesis.service.project.ProjectService;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
 
 	@Autowired
-	private UserService userService;
-
-	@Autowired
-	private ConfirmationTokenService confirmationTokenService;
-
-	@GetMapping("/login")
-	String signIn() {
-		return "sign-in";
-	}
-
-	@PostMapping("/sign-in")
-	String signIpPage(User user) {
-		System.out.println("POST SIGN IN");
-		return "redirect:/user-welcome";
-	}
-
-	@GetMapping("/sign-up")
-	String signUpPage(User user) {
-		return "sign-up";
-	}
-
-
-	@GetMapping("/sign-up/confirm")
-	String confirmMail(@RequestParam("token") String token) {
-		Optional<ConfirmationToken> optionalConfirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
-		optionalConfirmationToken.ifPresent(userService::confirmUser);
-		return "redirect:/sign-in";
+	private ProjectService projectService;
+	
+	@PostMapping("/getMyActivities")
+	@PreAuthorize("hasAuthority('USER')")
+	public List<Activity> getMyActivities(@Valid @RequestBody SeeActivitiesAssociatedRequest request) {
+		List<Activity> activitiesAssociated = projectService.getActivitiesAssociated(request.getUserId());
+		for(Activity activity:activitiesAssociated)
+			System.out.println(activity.getProject());
+		return activitiesAssociated;
 	}
 	
-	@GetMapping("/user/welcomepage")
-	String userWelcomePage(User user) {
-		return "user-welcome";
+	@PostMapping("/seeProjectInfo")
+	@PreAuthorize("hasAuthority('USER')")
+	public Project seeProjectInfo(@Valid @RequestBody ActivityRequest request) {
+		Activity activity = projectService.getSingleActivity(request.getActivityId());
+		Project project = projectService.getSingleProject(activity.getProject().getId());
+		System.out.println("project " + project.getName() + " id " + project.getId());
+		return project;
+	}
+	
+	@PostMapping("/seeActivities")
+	@PreAuthorize("hasAuthority('USER')")
+	public List<Activity> seeActivities(@Valid @RequestBody ProjectRequest request) {
+		List<Activity> activities = projectService.getActivitiesPerProject(request.getProjectId());
+		return activities;
+	}
+	
+	@PostMapping("/registerHours")
+	@PreAuthorize("hasAuthority('USER')")
+	public ResponseEntity<?> registerHours(@Valid @RequestBody UserActivityHourRequest request) {
+		UserActivityHour userActivityHour = projectService.getUserActivityHour(request.getUserId(), request.getActivityId());
+		if(userActivityHour != null && projectService.RegisterHours(userActivityHour, request.getHours())) {
+			System.out.println("reg");
+			return ResponseEntity.ok(new MessageResponse("Hours registered correctly!"));
+		}
+		System.out.println("not reg");
+		return ResponseEntity.badRequest().body("Something went wrong, contact the Admin");
 	}
 	
 	
-
 	
 }

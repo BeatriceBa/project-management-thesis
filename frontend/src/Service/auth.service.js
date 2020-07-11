@@ -5,13 +5,13 @@ const API_URL = "http://localhost:8080/api/authentication/";
 class AuthService {
 	login(mail, password) {
 		return axios.post(API_URL + "signin", { mail,password })
-			.then(response => {
-				if (response.data.token) {
-			          localStorage.setItem('user', JSON.stringify(response.data));
-			        }
-				return response.data;
-	});
-  }
+		.then(response => {
+			if (response.data.token) {
+				localStorage.setItem('user', JSON.stringify(response.data));
+			}
+			return response.data;
+		});
+	}
 
 	logout() {
 		localStorage.removeItem("user");

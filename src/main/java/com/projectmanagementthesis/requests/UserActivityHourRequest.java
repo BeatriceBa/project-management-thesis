@@ -8,8 +8,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AssociateUserToActivityRequest {
+public class UserActivityHourRequest {
 	private long userId;
 	
 	private Integer activityId;
+	
+	private int hours;
 }

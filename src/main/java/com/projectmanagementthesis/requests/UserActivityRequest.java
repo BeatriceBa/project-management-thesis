@@ -1,5 +1,4 @@
 package com.projectmanagementthesis.requests;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +8,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetActivityRequest {
+public class UserActivityRequest {
+	private long userId;
+	
 	private Integer activityId;
 }

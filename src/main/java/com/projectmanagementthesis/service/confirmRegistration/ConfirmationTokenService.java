@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import com.projectmanagementthesis.model.User;
 import com.projectmanagementthesis.repositories.ConfirmationTokenRepository;
 
 import lombok.AllArgsConstructor;

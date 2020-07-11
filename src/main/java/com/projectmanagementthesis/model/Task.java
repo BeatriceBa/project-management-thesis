@@ -1,8 +1,5 @@
 package com.projectmanagementthesis.model;
 
-import java.time.LocalDate;
-import java.util.List;
-
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

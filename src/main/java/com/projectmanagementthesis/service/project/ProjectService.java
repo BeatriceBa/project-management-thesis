@@ -1,15 +1,13 @@
-package com.projectmanagementthesis.service.addProject;
+package com.projectmanagementthesis.service.project;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.projectmanagementthesis.model.Activity;
 import com.projectmanagementthesis.model.Project;
@@ -17,6 +15,7 @@ import com.projectmanagementthesis.model.Task;
 import com.projectmanagementthesis.model.UAKey;
 import com.projectmanagementthesis.model.User;
 import com.projectmanagementthesis.model.UserActivityHour;
+import com.projectmanagementthesis.model.UserType;
 import com.projectmanagementthesis.repositories.*;
 
 @Service
@@ -100,13 +99,16 @@ public class ProjectService {
 		return result;
 	}
 	
+	public List<User> getAvailableUsers() {
+		return userRepository.findByuserRole(UserType.USER);
+	}
+	
 	public List<Activity> getActivitiesPerProject(Integer id) {
 		return activityRepository.findByProjectId(id);
 	}
 	
 	public List<User> getUsersAssociated(Integer activityId){
-		Activity activity = getSingleActivity(activityId);
-		System.out.println(activity);
+		Activity activity = this.getSingleActivity(activityId);
 		List<UserActivityHour> uahActivity = userActivityHourRepository.findByActivity(activity);
 		List<User> usersAssociated = new LinkedList<User>();
 		for(UserActivityHour uah : uahActivity) {
@@ -115,54 +117,67 @@ public class ProjectService {
 		return usersAssociated;
 	}
 	
+	public List<Activity> getActivitiesAssociated(Long userId){
+		User user = this.getSingleUser(userId);
+		List<UserActivityHour> uahActivity = userActivityHourRepository.findByUser(user);
+		List<Activity> activitiesAssociated = new LinkedList<Activity>();
+		for(UserActivityHour uah : uahActivity) {
+			activitiesAssociated.add(uah.getActivity());
+		}
+		return activitiesAssociated;
+	}
 	
-	public void populate() {
-		Project project_1 = new Project("Project_1", 10000, LocalDate.now(), LocalDate.now().plusYears(2));
-		Project project_2 = new Project("Project_2", 20000, LocalDate.now(), LocalDate.now().plusYears(2));
+	public UserActivityHour getUserActivityHour(long user_id, Integer activity_id) {
+		Optional<UserActivityHour> result = userActivityHourRepository.findById(new UAKey(user_id,activity_id));
+		if (result.isPresent())
+			return result.get();
+		return null;
+	}
+	
+	public float getCurrentProjectBudget(Integer project_id) {
+		Project current = this.getSingleProject(project_id);
+		List<Activity> activities = current.getActivities_list();
+		float result = 0;
+		for(Activity activity : activities)	result+=activity.getBudget();
+		return result;
+	}
+	
+	public boolean RegisterHours(UserActivityHour userActivityHour, int hours) {
+		User currentUser = userActivityHour.getUser();
+		Activity currentActivity = userActivityHour.getActivity();
 		
-		projectRepository.save(project_1);
-		projectRepository.save(project_2);
-		
-		Activity activity_1 = new Activity("Activity_1", 5000, project_1, LocalDate.now(), LocalDate.now().plusYears(1));
-		Activity activity_2 = new Activity("Activity_2", 5000, project_1, LocalDate.now().plusYears(1), LocalDate.now().plusYears(2));
-		Activity activity_3 = new Activity("Activity_3", 10000, project_2, LocalDate.now(), LocalDate.now().plusYears(1));
-		Activity activity_4 = new Activity("Activity_4", 10000, project_2, LocalDate.now().plusYears(1), LocalDate.now().plusYears(2));
-
-		activityRepository.save(activity_1);
-		activityRepository.save(activity_2);
-		activityRepository.save(activity_3);
-		activityRepository.save(activity_4);
-		
-		taskRepository.save(new Task("taskName_1", activity_1));
-		taskRepository.save(new Task("taskName_2", activity_1));
-		taskRepository.save(new Task("taskName_3", activity_2));
-		taskRepository.save(new Task("taskName_4", activity_2));
-		taskRepository.save(new Task("taskName_5", activity_3));
-		taskRepository.save(new Task("taskName_6", activity_3));
-		taskRepository.save(new Task("taskName_7", activity_4));
-		taskRepository.save(new Task("taskName_8", activity_4));
-		
-//		User user_1 = new User("Name_1", "Surname_1", "email_1@test.test", "password_1");
-//		User user_2 = new User("Name_2", "Surname_2", "email_2@test.test", "password_2");
-//		User user_3 = new User("Name_3", "Surname_3", "email_3@test.test", "password_3");
-//		User user_4 = new User("Name_4", "Surname_4", "email_4@test.test", "password_4");
-//		User user_5 = new User("Name_5", "Surname_5", "email_5@test.test", "password_5");
-//		User user_6 = new User("Name_6", "Surname_6", "email_6@test.test", "password_6");
-//		User user_7 = new User("Name_7", "Surname_7", "email_7@test.test", "password_7");
-//		User user_8 = new User("Name_8", "Surname_8", "email_8@test.test", "password_8");
-		
-//		userRepository.save(user_1);
-//		userRepository.save(user_2);
-//		userRepository.save(user_3);
-//		userRepository.save(user_4);
-//		userRepository.save(user_5);
-//		userRepository.save(user_6);
-//		userRepository.save(user_7);
-//		userRepository.save(user_8);
-//		
-////		user_1.getActivities().addAll(Arrays.asList(activity_1,activity_2));
-//		userRepository.save(user_1);
-		
+		if(checkHours(currentUser,currentActivity,hours)) {
+			updateActivityBudget(hours, currentUser.getPricePerHour(), currentActivity);
+			updateUserDailyHours(hours, currentUser);
+			updateUserActivityHour(hours, userActivityHour);
+			return true;
+		}
+		return false;		
+	}
+	
+	private void updateUserActivityHour(int hours, UserActivityHour userActivityHour) {
+		int newHours = userActivityHour.getHours() + hours;
+		userActivityHour.setHours(newHours);
+		userActivityHourRepository.save(userActivityHour);
+	}
+	
+	private void updateActivityBudget(int hours, float price, Activity activity) {
+		float newActivityBudget = hours * price + activity.getCurrentBudget();
+		activity.setCurrentBudget(newActivityBudget);
+		activityRepository.save(activity);
+	}
+	
+	private void updateUserDailyHours(int hours, User user) {
+		int newUserDailyHours = user.getDailyHours() + hours;
+		user.setDailyHours(newUserDailyHours);
+		userRepository.save(user);
+	}
+	
+	private boolean checkHours(User user, Activity activity, int hours) {
+		if (user.getDailyHours() + hours >= 9)	return false;
+		if ((user.getPricePerHour() * hours + activity.getCurrentBudget()) <= activity.getBudget())
+			return true;
+		return false;
 	}
 	
 }
