@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
 		mailMessage.setSubject("Mail Confirmation Link!");
 		mailMessage.setFrom("beatricebaldassarre86@gmail.com");
 		mailMessage.setText( "Thank you for registering. Please click on the below link to activate your account.\n" 
-						+ "http://localhost:8080/sign-up/confirm?token="
+						+ "http://localhost:3000/confirmAccount/"
 						+ token);
 
 		emailSenderService.sendEmail(mailMessage);
@@ -60,6 +60,58 @@ public class UserService implements UserDetailsService {
 
 	}
 
+	
+	public boolean signUpUser(SignUpRequest signUpRequest) {
+
+		Optional<User> existingUser = userRepository.findByMail(signUpRequest.getMail());
+		if (!existingUser.isPresent()) {
+			User user = new User(signUpRequest.getName(), 
+					signUpRequest.getSurname(),
+					signUpRequest.getPricePerHour(),
+					signUpRequest.getMail(),
+					signUpRequest.getPassword());
+			
+			final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+			user.setPassword(encryptedPassword);
+			user.setUserRole(UserType.USER);
+
+			userRepository.save(user);
+			
+			final ConfirmationToken confirmationToken = new ConfirmationToken(user);
+			confirmationTokenService.saveConfirmationToken(confirmationToken);
+			sendConfirmationMail(user.getMail(), confirmationToken.getConfirmationToken());
+			return true;
+		}
+		return false;
+
+	}
+	
+	public boolean confirmUser(String token) {
+		Optional<ConfirmationToken> confirmationToken = confirmationTokenService.findConfirmationTokenByToken(token);
+		if(confirmationToken.isPresent()) {
+			final User user = confirmationToken.get().getUser();
+			user.setEnabled(true);
+			userRepository.save(user);
+			confirmationTokenService.deleteConfirmationToken(confirmationToken.get().getId());
+			return true;
+		}
+		return false;
+	}
+	
+	public Iterable<User> getUsers() {
+		return userRepository.findAll();
+	}
+	
+	public User deleteById(long id) {
+		Optional<User> deleted = userRepository.findById(id);
+		if(deleted.isPresent())	{
+			userRepository.delete(deleted.get());
+			return deleted.get();
+		}
+		return null;
+	}
+	
+	//Just for faster testing process
 	public boolean signUpUserNoConfirmation(SignUpRequest signUpRequest) {
 		
 		Optional<User> existingUser = userRepository.findByMail(signUpRequest.getMail());
@@ -82,22 +134,7 @@ public class UserService implements UserDetailsService {
 
 	}
 	
-	public void signUpUser(User user) {
-
-		Optional<User> existingUser = userRepository.findByMail(user.getMail());
-		if (!existingUser.isPresent()) {
-			final String encryptedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-			user.setPassword(encryptedPassword);
-			userRepository.save(user);
-	
-			final ConfirmationToken confirmationToken = new ConfirmationToken(user);
-			confirmationTokenService.saveConfirmationToken(confirmationToken);
-			sendConfirmationMail(user.getMail(), confirmationToken.getConfirmationToken());
-		}
-		else System.out.println("User already exists!");
-
-	}
-	
+	//Just for faster testing process
 	public boolean signUpAdminNoConfirmation(SignUpRequest signUpRequest) {
 		
 		Optional<User> existingUser = userRepository.findByMail(signUpRequest.getMail());
@@ -121,27 +158,6 @@ public class UserService implements UserDetailsService {
 
 	}
 
-	public void confirmUser(ConfirmationToken confirmationToken) {
-		
-		final User user = confirmationToken.getUser();
-		user.setEnabled(true);
-		userRepository.save(user);
-		confirmationTokenService.deleteConfirmationToken(confirmationToken.getId());
-
-	}
-	
-	public Iterable<User> getUsers() {
-		return userRepository.findAll();
-	}
-	
-	public User deleteById(long id) {
-		Optional<User> deleted = userRepository.findById(id);
-		if(deleted.isPresent())	{
-			userRepository.delete(deleted.get());
-			return deleted.get();
-		}
-		return null;
-	}
 	
 }
 

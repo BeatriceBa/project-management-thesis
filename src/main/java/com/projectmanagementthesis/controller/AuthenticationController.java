@@ -51,7 +51,6 @@ public class AuthenticationController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
 
-		
 		User userDetails = (User) authentication.getPrincipal();
 		System.out.println(userDetails.getAuthorities());
 		List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
@@ -63,12 +62,23 @@ public class AuthenticationController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-		if (!userService.signUpUserNoConfirmation(signUpRequest)) {
+		if (!userService.signUpUser(signUpRequest)) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Mail is already taken!"));
 		}
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+	
+	@PostMapping("/confirmAccount")
+	public ResponseEntity<?> confirmUser(@Valid @RequestBody ConfirmAccountRequest request) {
+		if (!userService.confirmUser(request.getToken())) {
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: no confirmation token for this user"));
+		}
+
+		return ResponseEntity.ok(new MessageResponse("User confirmed successfully! You can now login"));
 	}
 }

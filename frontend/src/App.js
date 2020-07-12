@@ -9,6 +9,8 @@ import Login from "./LoginComponents/login.component";
 import Register from "./LoginComponents/register.component";
 import Home from "./LoginComponents/home.component";
 import Profile from "./LoginComponents/profile.component";
+import ConfirmAccount from "./LoginComponents/confirm-account.component";
+
 
 import AddProject from "./AdminComponents/project.component";
 import AddActivity from "./AdminComponents/add-activity.component";
@@ -136,6 +138,7 @@ class App extends Component {
 				<Route exact path="/register" component={Register} />
 				<Route exact path="/addProject" component={AddProject} />
 				<Route exact path="/addActivity/:id" component={AddActivity} />
+				<Route exact path="/confirmAccount/:token" component={ConfirmAccount} />
 				<Route path="/showInfo/:id" component={ShowInfo} />
 				<Route path="/getUsersAssociated/:id" component={UsersAssociated} />
 				<Route path="/associateUser/:id" component={AssociateUser} />
