@@ -92,7 +92,7 @@ public class AdminController {
 
 		if(projectService.addUserActivityHour(userActivityHour) != null)
 			return ResponseEntity.ok(new MessageResponse("User associated successfully!"));
-		else return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body("User already associated to this activity");
+		else return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(new MessageResponse("User already associated to this activity"));
 	}
 	
 	@PostMapping("/getUsersAssociated")
@@ -116,5 +116,4 @@ public class AdminController {
 		return projectService.getCurrentProjectBudget(request.getProjectId());
 	}
 
-	
 }

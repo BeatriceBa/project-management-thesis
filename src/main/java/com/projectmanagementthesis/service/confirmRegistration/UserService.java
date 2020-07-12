@@ -1,5 +1,6 @@
 package com.projectmanagementthesis.service.confirmRegistration;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Optional;
 
@@ -19,7 +20,6 @@ import com.projectmanagementthesis.service.confirmRegistration.ConfirmationToken
 import com.projectmanagementthesis.service.confirmRegistration.ConfirmationTokenService;
 import com.projectmanagementthesis.service.confirmRegistration.EmailSenderService;
 
-//https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745
 @Service
 public class UserService implements UserDetailsService {
 
@@ -31,38 +31,24 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private ConfirmationTokenService confirmationTokenService;
-
+	
 	@Autowired
 	private EmailSenderService emailSenderService;
-	
 
-	public void sendConfirmationMail(String userMail, String token) {
 
-		final SimpleMailMessage mailMessage = new SimpleMailMessage();
-		
-		mailMessage.setTo(userMail);
-		mailMessage.setSubject("Mail Confirmation Link!");
-		mailMessage.setFrom("beatricebaldassarre86@gmail.com");
-		mailMessage.setText( "Thank you for registering. Please click on the below link to activate your account.\n" 
-						+ "http://localhost:3000/confirmAccount/"
-						+ token);
-
-		emailSenderService.sendEmail(mailMessage);
+	public void sendConfirmationMail(String userMail, String token) throws IOException {
+		emailSenderService.sendMail(userMail, token);
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
 		final Optional<User> optionalUser = userRepository.findByMail(email);
-		
 		return optionalUser.orElseThrow(() -> new UsernameNotFoundException
 			(MessageFormat.format("User with email {0} cannot be found.", email)));
-
 	}
 
 	
-	public boolean signUpUser(SignUpRequest signUpRequest) {
-
+	public boolean signUpUser(SignUpRequest signUpRequest) throws IOException {
 		Optional<User> existingUser = userRepository.findByMail(signUpRequest.getMail());
 		if (!existingUser.isPresent()) {
 			User user = new User(signUpRequest.getName(), 
@@ -83,7 +69,6 @@ public class UserService implements UserDetailsService {
 			return true;
 		}
 		return false;
-
 	}
 	
 	public boolean confirmUser(String token) {
@@ -160,4 +145,6 @@ public class UserService implements UserDetailsService {
 
 	
 }
+
+//https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745
 

@@ -1,5 +1,6 @@
 package com.projectmanagementthesis.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,11 +58,12 @@ public class AuthenticationController {
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(
-				new JwtResponse(jwt, userDetails.getId(), userDetails.getName(), userDetails.getSurname(), userDetails.getMail(), roles));
+				new JwtResponse(jwt, userDetails.getId(), userDetails.getName(), 
+						userDetails.getSurname(), userDetails.getMail(), roles));
 	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) throws IOException {
 		if (!userService.signUpUser(signUpRequest)) {
 			return ResponseEntity
 					.badRequest()

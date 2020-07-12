@@ -35,8 +35,6 @@ public class UserController {
 	@PreAuthorize("hasAuthority('USER')")
 	public List<Activity> getMyActivities(@Valid @RequestBody SeeActivitiesAssociatedRequest request) {
 		List<Activity> activitiesAssociated = projectService.getActivitiesAssociated(request.getUserId());
-		for(Activity activity:activitiesAssociated)
-			System.out.println(activity.getProject());
 		return activitiesAssociated;
 	}
 	
@@ -45,7 +43,6 @@ public class UserController {
 	public Project seeProjectInfo(@Valid @RequestBody ActivityRequest request) {
 		Activity activity = projectService.getSingleActivity(request.getActivityId());
 		Project project = projectService.getSingleProject(activity.getProject().getId());
-		System.out.println("project " + project.getName() + " id " + project.getId());
 		return project;
 	}
 	
@@ -61,13 +58,10 @@ public class UserController {
 	public ResponseEntity<?> registerHours(@Valid @RequestBody UserActivityHourRequest request) {
 		UserActivityHour userActivityHour = projectService.getUserActivityHour(request.getUserId(), request.getActivityId());
 		if(userActivityHour != null && projectService.RegisterHours(userActivityHour, request.getHours())) {
-			System.out.println("reg");
 			return ResponseEntity.ok(new MessageResponse("Hours registered correctly!"));
 		}
-		System.out.println("not reg");
-		return ResponseEntity.badRequest().body("Something went wrong, contact the Admin");
+		return ResponseEntity.badRequest().body(new MessageResponse("Oops something went wrong\n "
+				+ "(Maybe you want to work overtime?)\n"
+				+ "Contact the Admin for further informations"));
 	}
-	
-	
-	
 }
