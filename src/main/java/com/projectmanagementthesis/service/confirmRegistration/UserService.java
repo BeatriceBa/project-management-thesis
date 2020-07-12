@@ -31,13 +31,10 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private ConfirmationTokenService confirmationTokenService;
-	
-	@Autowired
-	private EmailSenderService emailSenderService;
 
 
 	public void sendConfirmationMail(String userMail, String token) throws IOException {
-		emailSenderService.sendMail(userMail, token);
+		EmailSenderService.send(userMail, token);
 	}
 
 	@Override

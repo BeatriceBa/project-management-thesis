@@ -1,9 +1,5 @@
 package com.projectmanagementthesis.service.confirmRegistration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.sendgrid.Method;
@@ -22,18 +18,10 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class EmailSenderService {
 
-	@Autowired
-	private JavaMailSender javaMailSender;
-	
-	@Async
-	public void sendEmail(SimpleMailMessage email) {
-		javaMailSender.send(email);
-	}
-	
 	public static void send(String userMail, String token) throws IOException {
 
-		Email from = new Email("noreply@projectmanagement.pmt");
-		Email to = new Email(userMail); // use your own email address here
+		Email from = new Email("beatricebaldassarre86@gmail.com");
+		Email to = new Email(userMail);
 
 		String subject = "Confirm your account";
 		Content content = new Content("text/plain", "Thank you for registering. Please click on the below link to activate your account.\n" 
@@ -54,19 +42,6 @@ public class EmailSenderService {
 		System.out.println(response.getStatusCode());
 		System.out.println(response.getHeaders());
 		System.out.println(response.getBody());
-	}
-	
-	public void sendMail(String userMail, String token) {
-		final SimpleMailMessage mailMessage = new SimpleMailMessage();
-		
-		mailMessage.setTo(userMail);
-		mailMessage.setSubject("Mail Confirmation Link!");
-		mailMessage.setFrom("beatricebaldassarre86@gmail.com");
-		mailMessage.setText( "Thank you for registering. Please click on the below link to activate your account.\n" 
-						+ "http://localhost:3000/confirmAccount/"
-						+ token);
-
-		javaMailSender.send(mailMessage);
 	}
 	
 }
