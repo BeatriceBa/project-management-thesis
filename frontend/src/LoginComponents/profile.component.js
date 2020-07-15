@@ -12,31 +12,33 @@ export default class Profile extends Component {
 
 	render() {
 		const { currentUser } = this.state;
-		console.log(this.state)
 		return (
 				<div className="container">
-				<header className="jumbotron">
-				<h3>
-				<strong>{currentUser.mail}</strong> Profile
-				</h3>
+					<header className="jumbotron">
+					<h3>
+						<strong> Welcome {currentUser.name} {currentUser.surname} </strong>
+					</h3>
 				</header>
 				<p>
-				<strong>Token:</strong>{" "}
-				{currentUser.token.substring(0, 20)} ...{" "}
-				{currentUser.token.substr(currentUser.token.length - 20)}
+					<strong>Daily Hours:</strong>{" "}
+					{currentUser.dailyHours}
 				</p>
 				<p>
-				<strong>Id:</strong>{" "}
-				{currentUser.id}
+					<strong>Price per hour:</strong>{" "}
+					{currentUser.pricePerHour}
+					</p>
+				<p>
+					<strong>Id:</strong>{" "}
+					{currentUser.id}
 				</p>
 				<p>
-				<strong>Email:</strong>{" "}
-				{currentUser.mail}
+					<strong>Email:</strong>{" "}
+					{currentUser.mail}
 				</p>
-				<strong>Authorities:</strong>
+					<strong>Authorities:</strong>
 				<ul>
-				{currentUser.roles &&
-					currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
+					{currentUser.roles &&
+						currentUser.roles.map((role, index) => <li key={index}>{role}</li>)}
 				</ul>
 				</div>
 		);

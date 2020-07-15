@@ -60,6 +60,8 @@ class ShowInfo extends Component {
 				<th>Budget</th>
 				<th>Begins</th>
 				<th>Ends</th>
+				<th>Delete</th>
+				<th>Update</th>
 				<th>Associated Users</th>
 				</tr>
 				</thead>
@@ -71,6 +73,8 @@ class ShowInfo extends Component {
 						<td>{activity.budget}</td>
 						<td>{activity.beginning}</td>
 						<td>{activity.end}</td>
+						<td><button className="btn btn-danger" onClick={() => this.addActivity(activity.id)}>Delete</button></td>
+						<td><button className="btn btn-warning" onClick={() => this.addActivity(activity.id)}>Update</button></td>
 						<td><button className="btn btn-success" onClick={() => this.seeUsers(activity.id)}>See Associated Users</button></td>
 						</tr>
 				)}

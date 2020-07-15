@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,7 +31,11 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private ConfirmationTokenService confirmationTokenService;
-
+	
+//	@Scheduled(cron = "0 1 * * * *",zone = "Europe/Rome")	
+//	public void reportCurrentTime() {
+//		System.out.println("hello");
+//	}
 
 	public void sendConfirmationMail(String userMail, String token) throws IOException {
 		EmailSenderService.send(userMail, token);
@@ -142,6 +146,4 @@ public class UserService implements UserDetailsService {
 
 	
 }
-
-//https://medium.com/@kamer.dev/spring-boot-user-registration-and-login-43a33ea19745
 

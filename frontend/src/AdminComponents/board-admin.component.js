@@ -54,6 +54,8 @@ export default class BoardAdmin extends Component {
 				<th>Ends</th>
 				<th>Info</th>
 				<th>Add Activity</th>
+				<th>Delete</th>
+				<th>Update</th>
 				</tr>
 				</thead>
 				<tbody>
@@ -64,8 +66,10 @@ export default class BoardAdmin extends Component {
 						<td>{project.budget}</td>
 						<td>{project.beginning}</td>
 						<td>{project.end}</td>
-						<td><button className="btn btn-success" onClick={() => this.showInfo(project.id)}>Show Info</button></td>
+						<td><button className="btn btn-info" onClick={() => this.showInfo(project.id)}>Show Info</button></td>
 						<td><button className="btn btn-success" onClick={() => this.addActivity(project.id)}>Add Activity</button></td>
+						<td><button className="btn btn-danger" onClick={() => this.addActivity(project.id)}>Delete</button></td>
+						<td><button className="btn btn-warning" onClick={() => this.addActivity(project.id)}>Update</button></td>
 						</tr>
 				)}
 				</tbody>

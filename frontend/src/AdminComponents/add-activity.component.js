@@ -52,7 +52,7 @@ export default class AddActivity extends Component {
 		
 		ProjectService.getCurrentProjectBudget(this.state.id)
 		.then( response =>{
-			this.setState({ maxBudget: this.state.project.budget - response.data  });
+			this.setState({ maxBudget: this.state.project.budget - response.data +1  });
 		});
 	}
 
