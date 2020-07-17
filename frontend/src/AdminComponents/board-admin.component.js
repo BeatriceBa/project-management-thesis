@@ -8,12 +8,13 @@ export default class BoardAdmin extends Component {
 		super(props)
 		this.state = {
 			projects: [],
-			message: null
+			message: null,
+			successful:false
 		}
 		this.refreshProjects = this.refreshProjects.bind(this)
 		this.showInfo = this.showInfo.bind(this)
 		this.updateProject = this.updateProject.bind(this)
-
+		this.deleteProject = this.deleteProject.bind(this)
 	}
 
 	componentDidMount() {
@@ -43,6 +44,29 @@ export default class BoardAdmin extends Component {
 	updateProject(id) {
 		console.log("update " + id)
 		this.props.history.push(`/updateProject/${id}`)
+	}
+	
+	deleteProject(id) {
+		console.log("delete " + id)
+		ProjectService.deleteProject(id)
+		.then( response => {
+			this.setState({
+				message: response.data.message,
+				successful : true
+			});
+				setTimeout(window.location.reload(false), 2000);
+
+		}, error => {
+			const resMessage = 
+				(error.response && error.response.data && error.response.data.message) ||
+				error.message ||
+				error.toString();
+
+			this.setState({
+				message: resMessage,
+				successful : false
+			});
+		});
 	}
 
 	render() {
@@ -75,12 +99,26 @@ export default class BoardAdmin extends Component {
 						<td>{project.end}</td>
 						<td><button className="btn btn-info" onClick={() => this.showInfo(project.id)}>Show Info</button></td>
 						<td><button className="btn btn-success" onClick={() => this.addActivity(project.id)}>Add Activity</button></td>
-						<td><button className="btn btn-danger" onClick={() => this.addActivity(project.id)}>Delete</button></td>
+						<td><button className="btn btn-danger" onClick={() => this.deleteProject(project.id)}>Delete</button></td>
 						<td><button className="btn btn-warning" onClick={() => this.updateProject(project.id)}>Update</button></td>
 						</tr>
 				)}
 				</tbody>
 				</table>
+				{this.state.message && (
+						<div className="form-group">
+						<div
+						className={
+								this.state.successful
+								? "alert alert-success"
+										: "alert alert-danger"
+						}
+						role="alert"
+							>
+						{this.state.message}
+						</div>
+						</div>
+				)}
 				</div>
 				</div>
 

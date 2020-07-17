@@ -141,6 +141,17 @@ public class ProjectService {
 		return result;
 	}
 	
+	public void deleteProject(Integer project_id){
+		Project project = this.getSingleProject(project_id);
+		List<Activity> activities = this.getActivitiesPerProject(project_id);
+		for(Activity currentActivity : activities) {
+			List<UserActivityHour> userActivityHours = userActivityHourRepository.findByActivity(currentActivity);
+			userActivityHourRepository.deleteAll(userActivityHours);
+		}
+		activityRepository.deleteAll(activities);
+		projectRepository.delete(project);
+	}
+	
 	public boolean RegisterHours(UserActivityHour userActivityHour, int hours) {
 		User currentUser = userActivityHour.getUser();
 		Activity currentActivity = userActivityHour.getActivity();

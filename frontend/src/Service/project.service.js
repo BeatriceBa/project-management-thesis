@@ -52,6 +52,10 @@ class ProjectService {
 	updateProject(projectId, name, budget, beginning, end) {
 		return axios.post(API_URL + "updateProject", {projectId, name, budget, beginning, end}, { headers: authHeader() });		
 	}
+	
+	deleteProject(projectId) {
+		return axios.post(API_URL + "deleteProject", {projectId}, { headers: authHeader() });	
+	}
 
 }
 
