@@ -115,5 +115,14 @@ public class AdminController {
 	public float getCurrentProjectBudget(@Valid @RequestBody ProjectRequest request) {
 		return projectService.getCurrentProjectBudget(request.getProjectId());
 	}
+	
+	@PostMapping("/updateProject")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public ResponseEntity<?> updateProject(@Valid @RequestBody UpdateProjectRequest request) {
+		projectService.addNewProject
+				(new Project(request.getProjectId(), request.getName(), request.getBudget(), request.getBeginning(), request.getEnd()));
+		
+		return ResponseEntity.ok(new MessageResponse("Project updated successfully!"));
+	}
 
 }

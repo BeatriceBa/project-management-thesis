@@ -18,6 +18,8 @@ import BoardAdmin from "./AdminComponents/board-admin.component";
 import ShowInfo from "./AdminComponents/show-info.component";
 import UsersAssociated from "./AdminComponents/see-users-associated.component";
 import AssociateUser from "./AdminComponents/associate-user.component";
+import UpdateProject from "./AdminComponents/update-project.component";
+
 
 import BoardUser from "./UserComponents/board-user.component";
 import RegisterHours from "./UserComponents/register-hours.component";
@@ -139,6 +141,7 @@ class App extends Component {
 				<Route exact path="/addProject" component={AddProject} />
 				<Route exact path="/addActivity/:id" component={AddActivity} />
 				<Route exact path="/confirmAccount/:token" component={ConfirmAccount} />
+				<Route exact path="/updateProject/:id" component={UpdateProject} />
 				<Route path="/showInfo/:id" component={ShowInfo} />
 				<Route path="/getUsersAssociated/:id" component={UsersAssociated} />
 				<Route path="/associateUser/:id" component={AssociateUser} />

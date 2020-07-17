@@ -12,6 +12,8 @@ export default class BoardAdmin extends Component {
 		}
 		this.refreshProjects = this.refreshProjects.bind(this)
 		this.showInfo = this.showInfo.bind(this)
+		this.updateProject = this.updateProject.bind(this)
+
 	}
 
 	componentDidMount() {
@@ -36,6 +38,11 @@ export default class BoardAdmin extends Component {
 	addActivity(id) {
 		console.log("info of " + id)
 		this.props.history.push(`/addActivity/${id}`)
+	}
+	
+	updateProject(id) {
+		console.log("update " + id)
+		this.props.history.push(`/updateProject/${id}`)
 	}
 
 	render() {
@@ -69,7 +76,7 @@ export default class BoardAdmin extends Component {
 						<td><button className="btn btn-info" onClick={() => this.showInfo(project.id)}>Show Info</button></td>
 						<td><button className="btn btn-success" onClick={() => this.addActivity(project.id)}>Add Activity</button></td>
 						<td><button className="btn btn-danger" onClick={() => this.addActivity(project.id)}>Delete</button></td>
-						<td><button className="btn btn-warning" onClick={() => this.addActivity(project.id)}>Update</button></td>
+						<td><button className="btn btn-warning" onClick={() => this.updateProject(project.id)}>Update</button></td>
 						</tr>
 				)}
 				</tbody>

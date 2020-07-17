@@ -1,6 +1,7 @@
 package com.projectmanagementthesis.model;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -44,5 +45,17 @@ public class Project {
 		this.beginning = beginning;
 		this.end = end;
 	}
+	
+	public Project(Integer id, String name, float budget, LocalDate beginning, LocalDate end) {
+		this.id = id;
+		this.name = name;
+		this.budget = budget;
+		this.beginning = beginning;
+		this.end = end;
+		this.activities_list = new LinkedList<Activity>();
+	}
+	
+	
+	
 }
 

@@ -48,6 +48,10 @@ class ProjectService {
 	getAvailableUsers() {
 		return axios.get(API_URL + "getAvailableUsers", { headers: authHeader() });
 	}
+	
+	updateProject(projectId, name, budget, beginning, end) {
+		return axios.post(API_URL + "updateProject", {projectId, name, budget, beginning, end}, { headers: authHeader() });		
+	}
 
 }
 
