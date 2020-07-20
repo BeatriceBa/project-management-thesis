@@ -72,4 +72,17 @@ public class Activity {
 		this.userActivityHour = new LinkedList<UserActivityHour>();
 	}
 
+	public Activity(Integer id, String name, float budget, LocalDate beginning, LocalDate end,
+			Project project) {
+		this.id = id;
+		this.name = name;
+		this.budget = budget;
+		this.beginning = beginning;
+		this.end = end;
+		this.project = project;
+		this.userActivityHour = new LinkedList<UserActivityHour>();
+	}
+	
+	
+
 }

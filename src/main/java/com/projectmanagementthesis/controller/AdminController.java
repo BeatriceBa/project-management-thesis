@@ -1,5 +1,6 @@
 package com.projectmanagementthesis.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -32,7 +33,7 @@ public class AdminController {
 	@PostMapping("/addProject")
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
 	public ResponseEntity<?> addProject(@Valid @RequestBody AddProjectRequest request) {
-		projectService.addNewProject
+		projectService.saveProject
 				(new Project(request.getName(), request.getBudget(), request.getBeginning(), request.getEnd()));
 		
 		return ResponseEntity.ok(new MessageResponse("Project added successfully!"));
@@ -76,7 +77,7 @@ public class AdminController {
 	public ResponseEntity<?> addActivity(@Valid @RequestBody AddActivityRequest request) {
 		Project currentProject = projectService.getSingleProject(request.getProjectId());
 
-		projectService.addNewActivity
+		projectService.saveActivity
 				(new Activity(request.getName(), request.getBudget(),currentProject, request.getBeginning(), request.getEnd()));
 		
 		return ResponseEntity.ok(new MessageResponse("Activity added successfully!"));
@@ -91,7 +92,7 @@ public class AdminController {
 		UserActivityHour userActivityHour = new UserActivityHour
 				(new UAKey(request.getUserId(),request.getActivityId()), user, activity, 0);
 
-		if(projectService.addUserActivityHour(userActivityHour) != null)
+		if(projectService.saveUserActivityHour(userActivityHour) != null)
 			return ResponseEntity.ok(new MessageResponse("User associated successfully!"));
 		else return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(new MessageResponse("User already associated to this activity"));
 	}
@@ -120,7 +121,7 @@ public class AdminController {
 	@PostMapping("/updateProject")
 	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
 	public ResponseEntity<?> updateProject(@Valid @RequestBody UpdateProjectRequest request) {
-		projectService.addNewProject
+		projectService.saveProject
 				(new Project(request.getProjectId(), request.getName(), request.getBudget(), request.getBeginning(), request.getEnd()));
 		
 		return ResponseEntity.ok(new MessageResponse("Project updated successfully!"));
@@ -132,6 +133,31 @@ public class AdminController {
 		projectService.deleteProject(request.getProjectId());
 		return ResponseEntity.ok(new MessageResponse("Project deleted successfully!"));
 	}
-
+	
+	@PostMapping("/updateActivity")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public ResponseEntity<?> updateActivity(@Valid @RequestBody UpdateActivityRequest request) {
+		Project relatedProject = projectService.getSingleProject(request.getProjectId());
+		
+		projectService.saveActivity
+			(new Activity (request.getActivityId(), request.getName(), request.getBudget(), request.getBeginning(), 
+					request.getEnd(), relatedProject));
+		
+		return ResponseEntity.ok(new MessageResponse("Activity updated successfully!"));
+	}
+	
+	@PostMapping("/deleteActivity")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public ResponseEntity<?> deleteActivity(@Valid @RequestBody ActivityRequest request) {
+		projectService.deleteActivity(request.getActivityId());
+		return ResponseEntity.ok(new MessageResponse("Activity deleted successfully!"));
+	}
+	
+	@PostMapping("/getProjectFromActivity")
+	@PreAuthorize("hasAuthority('ADMINISTRATOR')")
+	public Integer getProjectFromActivity(@Valid @RequestBody ActivityRequest request) {
+		Activity activity = projectService.getSingleActivity(request.getActivityId());
+		return activity.getProject().getId();
+	}
 
 }

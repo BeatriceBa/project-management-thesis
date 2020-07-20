@@ -34,27 +34,27 @@ public class ProjectService {
 	@Autowired
 	private UserActivityHourRepository userActivityHourRepository;
 	
-	public Project addNewProject(Project project) {
+	public Project saveProject(Project project) {
 		Project added = projectRepository.save(project);
 		return added;
 	}
 	
-	public User addNewUser(User user) {
+	public User saveUser(User user) {
 		User added = userRepository.save(user);
 		return added;
 	}
 	
-	public Activity addNewActivity(Activity activity) {
+	public Activity saveActivity(Activity activity) {
 		Activity added = activityRepository.save(activity);
 		return added;
 	}
 	
-	public Task addNewTask(Task task) {
+	public Task saveTask(Task task) {
 		Task added = taskRepository.save(task);
 		return added;
 	}
 	
-	public UserActivityHour addUserActivityHour(UserActivityHour userActivityHour) {		
+	public UserActivityHour saveUserActivityHour(UserActivityHour userActivityHour) {		
 		if (userActivityHourRepository.existsById(userActivityHour.getKey()))
 			return null;
 		else {
@@ -150,6 +150,13 @@ public class ProjectService {
 		}
 		activityRepository.deleteAll(activities);
 		projectRepository.delete(project);
+	}
+	
+	public void deleteActivity(Integer activity_id) {
+		Activity activity = this.getSingleActivity(activity_id);
+		List<UserActivityHour> userActivityHours = userActivityHourRepository.findByActivity(activity);
+		userActivityHourRepository.deleteAll(userActivityHours);
+		activityRepository.delete(activity);
 	}
 	
 	public boolean RegisterHours(UserActivityHour userActivityHour, int hours) {

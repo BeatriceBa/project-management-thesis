@@ -11,7 +11,6 @@ import Home from "./LoginComponents/home.component";
 import Profile from "./LoginComponents/profile.component";
 import ConfirmAccount from "./LoginComponents/confirm-account.component";
 
-
 import AddProject from "./AdminComponents/project.component";
 import AddActivity from "./AdminComponents/add-activity.component";
 import BoardAdmin from "./AdminComponents/board-admin.component";
@@ -19,7 +18,7 @@ import ShowInfo from "./AdminComponents/show-info.component";
 import UsersAssociated from "./AdminComponents/see-users-associated.component";
 import AssociateUser from "./AdminComponents/associate-user.component";
 import UpdateProject from "./AdminComponents/update-project.component";
-
+import UpdateActivity from "./AdminComponents/update-activity.component";
 
 import BoardUser from "./UserComponents/board-user.component";
 import RegisterHours from "./UserComponents/register-hours.component";
@@ -142,6 +141,7 @@ class App extends Component {
 				<Route exact path="/addActivity/:id" component={AddActivity} />
 				<Route exact path="/confirmAccount/:token" component={ConfirmAccount} />
 				<Route exact path="/updateProject/:id" component={UpdateProject} />
+				<Route exact path="/updateActivity/:id" component={UpdateActivity} />
 				<Route path="/showInfo/:id" component={ShowInfo} />
 				<Route path="/getUsersAssociated/:id" component={UsersAssociated} />
 				<Route path="/associateUser/:id" component={AssociateUser} />

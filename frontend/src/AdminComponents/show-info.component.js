@@ -44,6 +44,10 @@ class ShowInfo extends Component {
 	seeUsers(id) {
 		this.props.history.push(`/getUsersAssociated/${id}`)
 	}
+	
+	updateActivity(id) {
+		this.props.history.push(`/updateActivity/${id}`)
+	}
 
 
 	render() {
@@ -74,7 +78,7 @@ class ShowInfo extends Component {
 						<td>{activity.beginning}</td>
 						<td>{activity.end}</td>
 						<td><button className="btn btn-danger" onClick={() => this.addActivity(activity.id)}>Delete</button></td>
-						<td><button className="btn btn-warning" onClick={() => this.addActivity(activity.id)}>Update</button></td>
+						<td><button className="btn btn-warning" onClick={() => this.updateActivity(activity.id)}>Update</button></td>
 						<td><button className="btn btn-success" onClick={() => this.seeUsers(activity.id)}>See Associated Users</button></td>
 						</tr>
 				)}
