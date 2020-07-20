@@ -64,6 +64,10 @@ class ProjectService {
 	getProjectFromActivity(activityId) {
 		return axios.post(API_URL + "getProjectFromActivity", {activityId}, { headers: authHeader() });
 	}
+	
+	deleteActivity(activityId) {
+		return axios.post(API_URL + "deleteActivity", {activityId}, { headers: authHeader() });	
+	}
 
 }
 

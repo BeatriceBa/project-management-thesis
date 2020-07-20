@@ -54,7 +54,7 @@ export default class BoardAdmin extends Component {
 				message: response.data.message,
 				successful : true
 			});
-			setTimeout(window.location.reload(false), 2000);
+			setTimeout(window.location.reload(false), 3000);
 		}, error => {
 			const resMessage = 
 				(error.response && error.response.data && error.response.data.message) ||
