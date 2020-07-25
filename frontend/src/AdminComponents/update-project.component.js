@@ -94,6 +94,7 @@ export default class UpdateProject extends Component {
 							message: response.data.message,
 							successful: true
 						});
+						setTimeout(() => { window.location.reload(false); }, 1000);
 					}, error => {
 						const resMessage = 
 							(error.response && error.response.data && error.response.data.message) ||

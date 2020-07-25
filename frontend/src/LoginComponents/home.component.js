@@ -56,7 +56,7 @@ export default class Home extends Component {
 									</Card.Text>
 								</Card.Body>
 							<Card.Footer>
-								<small className="text-muted">Call me microsoft</small>
+								<small className="text-muted">Call me Microsoft</small>
 							</Card.Footer>
 						</Card>
 						

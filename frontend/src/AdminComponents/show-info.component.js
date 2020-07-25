@@ -57,7 +57,7 @@ class ShowInfo extends Component {
 				message: response.data.message,
 				successful : true
 			});
-			setTimeout(window.location.reload(false), 3000);
+			setTimeout(() => { window.location.reload(false); }, 1000);
 		}, error => {
 			const resMessage = 
 				(error.response && error.response.data && error.response.data.message) ||
@@ -84,6 +84,7 @@ class ShowInfo extends Component {
 						<tr>
 							<th>Name</th>
 							<th>Budget</th>
+							<th>Current Budget</th>							
 							<th>Begins</th>
 							<th>Ends</th>
 							<th>Delete</th>
@@ -97,6 +98,7 @@ class ShowInfo extends Component {
 								<tr key={activity.id}>
 								<td>{activity.name}</td>
 								<td>{activity.budget}</td>
+								<td>{activity.currentBudget}</td>								
 								<td>{activity.beginning}</td>
 								<td>{activity.end}</td>
 								<td><button className="btn btn-danger" onClick={() => this.deleteActivity(activity.id)}>Delete</button></td>

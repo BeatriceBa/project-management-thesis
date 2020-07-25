@@ -52,7 +52,7 @@ export default class AddActivity extends Component {
 		
 		ProjectService.getCurrentProjectBudget(this.state.id)
 		.then( response =>{
-			this.setState({ maxBudget: this.state.project.budget - response.data +1  });
+			this.setState({ maxBudget: this.state.project.budget - response.data  });
 		});
 	}
 
@@ -101,6 +101,7 @@ export default class AddActivity extends Component {
 							message: response.data.message,
 							successful: true
 						});
+						setTimeout(() => { window.location.reload(false); }, 1000);
 					}, error => {
 						const resMessage = 
 							(error.response && error.response.data && error.response.data.message) ||
@@ -120,7 +121,7 @@ export default class AddActivity extends Component {
 	render() {
 		
 		const vbudget = value => {
-			if (value <= 0 || value >= this.state.maxBudget) {
+			if (value <= 0 || value > this.state.maxBudget) {
 				return (
 						<div className="alert alert-danger" role="alert">
 						Value must be between 1 and maximum project budget.
@@ -163,6 +164,7 @@ export default class AddActivity extends Component {
 							inputmode="numeric"	
 							max = {this.state.maxBudget}
 							value={this.state.budget}
+							placeholder={this.state.maxBudget}
 							onChange={this.onChangeBudget}
 							validations={[required, vbudget]}
 						/>

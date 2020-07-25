@@ -31,11 +31,6 @@ public class UserService implements UserDetailsService {
 
 	@Autowired
 	private ConfirmationTokenService confirmationTokenService;
-	
-//	@Scheduled(cron = "0 1 * * * *",zone = "Europe/Rome")	
-//	public void reportCurrentTime() {
-//		System.out.println("hello");
-//	}
 
 	public void sendConfirmationMail(String userMail, String token) throws IOException {
 		EmailSenderService.send(userMail, token);

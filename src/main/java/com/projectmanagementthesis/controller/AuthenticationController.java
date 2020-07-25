@@ -65,7 +65,7 @@ public class AuthenticationController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) throws IOException {
-		if (!userService.signUpUser(signUpRequest)) {
+		if (!userService.signUpUserNoConfirmation(signUpRequest)) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Mail is already taken!"));
